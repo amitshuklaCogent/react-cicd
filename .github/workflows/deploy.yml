@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -19,12 +19,12 @@ jobs:
           node-version: 20
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Build
+      - name: Build Project
         run: npm run build
 
-      - name: Copy Files
+      - name: Upload Build Files
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
@@ -32,3 +32,13 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "dist/*"
           target: "/var/www/html/react-app"
+
+      - name: Fix Structure on Server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cp -r /var/www/html/react-app/dist/* /var/www/html/react-app/ 2>/dev/null || true
+            rm -rf /var/www/html/react-app/dist
