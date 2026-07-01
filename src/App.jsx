@@ -20,6 +20,7 @@ function App() {
           <p>
             Edit <code>src/App.jsx</code> and save to....  <code>HMR</code>
           </p>
+          <p>Hello, Tst CI CD</p>
         </div>
         <button
           type="button"
